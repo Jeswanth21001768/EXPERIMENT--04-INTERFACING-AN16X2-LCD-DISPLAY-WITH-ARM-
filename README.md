@@ -1,13 +1,13 @@
 # EXPERIMENT--04-INTERFACING-AN16X2-LCD-DISPLAY-WITH-ARM AND DISPLAY STRING
 
 
- ## Aim: To Interface a 16X2 LCD display to ARM controller  , and simulate it in Proteus 
-## Components required: STM32 CUBE IDE, Proteus 8 simulator .
+ ## Aim: To Interface a 16X2 LCD display to ARM controller, and simulate it in Proteus 
+## Components required: STM32 CUBE IDE, Proteus 8 simulator.
 ## Theory 
-The full form of an ARM is an advanced reduced instruction set computer (RISC) machine, and it is a 32-bit processor architecture expanded by ARM holdings. The applications of an ARM processor include several microcontrollers as well as processors. The architecture of an ARM processor was licensed by many corporations for designing ARM processor-based SoC products and CPUs. This allows the corporations to manufacture their products using ARM architecture. Likewise, all main semiconductor companies will make ARM-based SOCs such as Samsung, Atmel, TI etc.
+The full form of an ARM is an advanced reduced instruction set computer (RISC) machine, a 32-bit processor architecture expanded by ARM holdings. The applications of an ARM processor include several microcontrollers as well as processors. Many corporations licensed the architecture of an ARM processor for designing ARM processor-based SoC products and CPUs. This allows corporations to manufacture their products using ARM architecture. Likewise, all main semiconductor companies will make ARM-based SOCs such as Samsung, Atmel, TI, etc.
 
 What is an ARM7 Processor?
-ARM7 processor is commonly used in embedded system applications. Also, it is a balance among classic as well as new-Cortex sequence. This processor is tremendous in finding the resources existing on the internet with excellence documentation offered by NXP Semiconductors. It suits completely for an apprentice to obtain in detail hardware & software design implementation.
+ARM7 processor is commonly used in embedded system applications. Also, it is a balance among classic as well as new-Cortex sequences. This processor is tremendous in finding the resources existing on the internet with excellent documentation offered by NXP Semiconductors. It suits completely for an apprentice to obtain in-detail hardware & software design implementation.
  STM32F401xB STM32F401xC ARM® Cortex®-M4 32b MCU+FPU, 105 DMIPS, 256KB Flash/64KB RAM, 11 TIMs, 1 ADC, 11 comm.
 interfaces Datasheet - production data Features
 • Core: ARM® 32-bit Cortex®-M4 CPU with FPU, Adaptive real-time accelerator (ART Accelerator™) allowing 0-wait state execution from Flash memory, frequency up to 84 MHz, memory protection unit, 105 DMIPS/ 1.
@@ -20,8 +20,8 @@ interfaces Datasheet - production data Features
    16×2 LCD is named so because; it has 16 Columns and 2 Rows. There are a lot of combinations available like,
    8×1, 8×2, 10×2, 16×1, etc. But the most used one is the 16*2 LCD, hence we are using it here.
 
-All the above mentioned LCD display will have 16 Pins and the programming approach is also the same and hence the choice is left to you. 
-Below is the Pinout and Pin Description of 16x2 LCD Module:
+All the above-mentioned LCD displays will have 16 Pins and the programming approach is also the same hence the choice is left to you. 
+Below is the Pinout and Pin Description of the 16x2 LCD Module:
 
 ![image](https://user-images.githubusercontent.com/36288975/233858086-7b1a88a2-f941-475c-86c2-b3bae68bdf7e.png)
 ![image](https://user-images.githubusercontent.com/36288975/233857710-541ac1c2-786c-4dfc-b7b5-e3a4868a9cb6.png)
@@ -29,14 +29,14 @@ Below is the Pinout and Pin Description of 16x2 LCD Module:
 
 4-bit and 8-bit Mode of LCD:
 
-The LCD can work in two different modes, namely the 4-bit mode and the 8-bit mode. In 4 bit mode we send the data nibble by nibble, first upper nibble and then lower nibble. For those of you who don’t know what a nibble is: a nibble is a group of four bits, so the lower four bits (D0-D3) of a byte form the lower nibble while the upper four bits (D4-D7) of a byte form the higher nibble. This enables us to send 8 bit data.
+The LCD can work in two different modes, namely the 4-bit mode and the 8-bit mode. In 4-bit mode we send the data nibble by nibble, first upper nibble and then lower nibble. For those of you who don’t know what a nibble is: a nibble is a group of four bits, so the lower four bits (D0-D3) of a byte form the lower nibble while the upper four bits (D4-D7) of a byte form the higher nibble. This enables us to send 8-bit data.
 
-Whereas in 8 bit mode we can send the 8-bit data directly in one stroke since we use all the 8 data lines.
+Whereas in 8-bit mode, we can send the 8-bit data directly in one stroke since we use all the 8 data lines.
 
- 8-bit mode is faster and flawless than 4-bit mode. But the major drawback is that it needs 8 data lines connected to the microcontroller. This will make us run out of I/O pins on our MCU, so 4-bit mode is widely used. No control pins are used to set these modes. 
+ 8-bit mode is faster and flawless than 4-bit mode. But the major drawback is that it needs 8 data lines connected to the microcontroller. This will make us run out of I/O pins on our MCU, so the 4-bit mode is widely used. No control pins are used to set these modes. 
  LCD Commands:
 
-There are some preset commands instructions in LCD, which we need to send to LCD through some microcontroller. Some important command instructions are given below:
+There are some preset command instructions in LCD, which we need to send to LCD through some microcontroller. Some important command instructions are given below:
 
 Hex Code
 
@@ -76,11 +76,11 @@ Display ON, cursor blinking
 
 80
 
-Force cursor to beginning of first line
+Force the cursor to the beginning of the first line
 
 C0
 
-Force cursor to beginning of second line
+Force the cursor to the beginning of the second line
 
 38
 
@@ -92,7 +92,7 @@ Cursor line 1 position 3
 
 3C
 
-Activate second line
+Activate the second line
 
 08
 
@@ -174,15 +174,45 @@ https://engineeringxpert.com/wp-content/uploads/2022/04/26.png
 
 ## STM 32 CUBE PROGRAM :
 
+~~~
+#include "main.h"
+#include "lcd.h"
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+int main(void)
+{
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  	  Lcd_PortType ports[]={GPIOA,GPIOA,GPIOA,GPIOA};
+  	  Lcd_PinType pins[]={GPIO_PIN_3,GPIO_PIN_2,GPIO_PIN_1,GPIO_PIN_0};
+  	  Lcd_HandleTypeDef lcd;
+  	  lcd=Lcd_create(ports,pins,GPIOB,GPIO_PIN_0,GPIOB,GPIO_PIN_1,LCD_4_BIT_MODE);
+  	  Lcd_cursor(&lcd,0,1);
+  	  Lcd_string(&lcd,"DEPT - AIDS");
+  while (1)
+  {
+    	Lcd_cursor(&lcd,1,1);
+    	  	  Lcd_string(&lcd,"Jeswanth");
+  }
+}
+
+~~~
 
 
+## Output screenshots of proteus  :
+ ## LED OFF CONDITION
+ ![image](https://user-images.githubusercontent.com/94226297/234249437-3d616cfc-142d-4fe3-ba4b-e884ff0535d6.png)
+## LED ON CONDITION
+![image](https://github.com/Jeswanth21001768/EXPERIMENT--04-INTERFACING-AN16X2-LCD-DISPLAY-WITH-ARM-/assets/94155480/01ecaf23-6ff5-4731-8484-4dd6487b3246)
 
-## Output screen shots of proteus  :
+
  
+ ## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREENSHOT HERE): 
  
- ## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREEN SHOT HERE): 
- 
- 
+![image](https://github.com/Jeswanth21001768/EXPERIMENT--04-INTERFACING-AN16X2-LCD-DISPLAY-WITH-ARM-/assets/94155480/db0d2560-7ec1-4151-b0fa-8d7d3e132e57)
+
+
 ## Result :
-Interfacing a lcd display with ARM microcontroller are simulated in proteus and the results are verified.
+Interfacing a digital output and digital input  with an ARM microcontroller is simulated in proteus and the results are verified.
 
